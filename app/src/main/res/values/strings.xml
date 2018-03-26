@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">MisContactos</string>
+    <string name="nombre">Hernan Ramirez</string>
+    <string name="telefono">5552222222</string>
+    <string name="email">nan@nan.com</string>
+
+    <string name="cnombre">Nombre</string>
+    <string name="ctelefono">Telefono</string>
+    <string name="cemail">Email</string>
+
+</resources>
