@@ -1,8 +1,15 @@
 package info.hernanramirez.miscontactos;
 
 import android.content.Intent;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -10,44 +17,52 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import info.hernanramirez.miscontactos.adapters.ContactoAdaptador;
+import info.hernanramirez.miscontactos.adapters.PageAdapter;
+import info.hernanramirez.miscontactos.fragments.PerfilFragment;
+import info.hernanramirez.miscontactos.fragments.RecyclerViewFragment;
 import info.hernanramirez.miscontactos.models.Contacto;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<Contacto> contactos;
+    private Toolbar toolbar;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        contactos = new ArrayList<Contacto>();
-        contactos.add(new Contacto("Hernan Ramirez","555444", "nan@nan.com"));
-        contactos.add(new Contacto("Sebastian Ramirez","555444", "nan@nan.com"));
-        contactos.add(new Contacto("Maria Jose Ramirez","555444", "nan@nan.com"));
-        contactos.add(new Contacto("Marianella Alvarado","555444","nan@nan.com"));
+        toolbar = (Toolbar) findViewById(R.id.toobar);
+        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
 
-        ArrayList<String> nombresContacto = new ArrayList<>();
+        setUpViewPager();
 
-        for (Contacto contacto: contactos){
-            nombresContacto.add(contacto.getNombre());
-
+        if (toolbar == null){
+            setSupportActionBar(toolbar);
         }
 
-        ListView lstContactos = (ListView) findViewById(R.id.lstContactos);
-        lstContactos.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, nombresContacto));
+    }
 
-        lstContactos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, DetalleContacto.class);
-                intent.putExtra(getResources().getString(R.string.cnombre), contactos.get(position).getNombre());
-                intent.putExtra(getResources().getString(R.string.cemail), contactos.get(position).getEmail());
-                intent.putExtra(getResources().getString(R.string.ctelefono), contactos.get(position).getTelefono());
-                startActivity(intent);
-                finish();
-            }
-        });
+    private ArrayList<Fragment> agregarFragment(){
+        ArrayList<Fragment> fragments = new ArrayList<>();
+
+        fragments.add(new RecyclerViewFragment());
+        fragments.add(new PerfilFragment());
+
+        return fragments;
+    }
+
+    private void setUpViewPager(){
+
+         viewPager.setAdapter(new PageAdapter(getSupportFragmentManager(), agregarFragment()));
+         tabLayout.setupWithViewPager(viewPager);
+
+         tabLayout.getTabAt(0).setIcon(R.drawable.ic_contacts_groups);
+         tabLayout.getTabAt(1).setIcon(R.drawable.ic_contacts);
 
     }
+
 }
